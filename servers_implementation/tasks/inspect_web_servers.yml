@@ -5,11 +5,19 @@
   changed_when: true
 
 - name: "Printing fastwebserver service status"
-  vars: 
+  vars:
     msg: "{{ status.stdout_lines[0:9] }}"
   ansible.builtin.debug:
     msg: "{{ msg[4:10] }}"
 
+- name: "Availability check and confirmation if the fastwebserver is down"
+  ansible.builtin.debug:
+    msg: "FastWebServer failed to start"
+  when: ("running" not in status.stdout_lines[4]) 
+
+- name: "Printing the fact that fastwebserver is up"
+  ansible.builtin.debug:
+    msg: "FastWebServer is up!" 
 
 - name: "Find out the server OS status and resources consumption"
   ansible.builtin.shell: |
@@ -22,6 +30,7 @@
   register: output_perf
   changed_when: true
 
-- name: "Printing output of perf commands"
+- name: "Printing the status of Os and resources"
   ansible.builtin.debug:
-    var: "output_perf.stdout_lines"
+    var: output_perf.stdout_lines
+    

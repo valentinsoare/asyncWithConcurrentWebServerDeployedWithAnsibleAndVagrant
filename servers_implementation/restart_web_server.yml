@@ -1,0 +1,23 @@
+- name: "Planned restart of the fastwebserver"
+  hosts: web_servers
+  tags: fast_webservers_restart
+
+  tasks:
+    - name: "Check status of the server"
+      ansible.builtin.command:
+        cmd: systemctl status fastwebserver
+      register: output
+      changed_when: true
+    
+    - name: "Print the status of the server"
+      ansible.builtin.debug:
+        var: output.stdout_lines
+
+    - name: "Restart the server and do a daemon_reload"
+      ansible.builtin.systemd_service:
+        state: restarted
+        daemon_reload: true
+        name: fastwebserver
+      when: output.rc == 0
+
+
