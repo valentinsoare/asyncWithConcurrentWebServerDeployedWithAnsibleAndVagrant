@@ -1,0 +1,55 @@
+---
+- name: "Provision only one virtual machine with Vagrant"
+  hosts: all
+  become: true
+  tags: vm_provision_with_vagrant
+
+  tasks:
+    - name: "Update the OS"
+      ansible.builtin.dnf:
+        name: "*"
+        state: present
+        update_only: true
+
+    - name: "Set Message Of The Day banner"
+      ansible.builtin.template:
+        src: /home/vsoare/Documents/projectWithDevAndOps/WithAnsible/LearningForAnsibleCertification/servers_implementation/templates/banner.j2
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: "Creating group fastwebserver for server"
+      ansible.builtin.group:
+        name: fastwebserver
+        state: present
+
+    - name: "Creating user fastwebserver with proper config values"
+      ansible.builtin.user:
+        name: fastwebserver
+        comment: "User fastwebserver has great power!"
+        shell: /bin/bash
+        expires: -1
+        home: "/home/fastwebserver"
+        append: false
+
+    - name: "Add fastwebserver user in group wheel"
+      ansible.builtin.user:
+        name: fastwebserver
+        groups: wheel
+        append: true
+
+    - name: "Open the 80 and 8080 tcp ports"
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      loop:
+        - 80/tcp
+        - 8080/tcp
+
+    - name: "Restart the firewalld"
+      ansible.builtin.systemd_service:
+        name: firewalld
+        state: restarted
+...
