@@ -1,0 +1,10 @@
+---
+- name: "Checking the webserver app availability and uptime"
+  hosts: web_servers
+  tags: webservers_performance
+
+  tasks:
+    - name: "Load and execute webserver inspection tasks"
+      ansible.builtin.include_tasks:
+        file: ./tasks/inspect_web_servers.yml
+...

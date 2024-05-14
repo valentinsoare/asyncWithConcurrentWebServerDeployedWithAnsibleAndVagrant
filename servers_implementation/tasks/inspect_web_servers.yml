@@ -1,0 +1,27 @@
+- name: "Extract availability, uptime and resources consumption of the app"
+  ansible.builtin.command:
+    cmd: systemctl status fastwebserver
+  register: status
+  changed_when: true
+
+- name: "Printing fastwebserver service status"
+  vars: 
+    msg: "{{ status.stdout_lines[0:9] }}"
+  ansible.builtin.debug:
+    msg: "{{ msg[4:10] }}"
+
+
+- name: "Find out the server OS status and resources consumption"
+  ansible.builtin.shell: |
+      free -mh && \
+      echo "--------------"
+      uptime && \
+      echo "--------------"
+      top -b -n 1 | head -n +6 && \
+      echo "--------------"
+  register: output_perf
+  changed_when: true
+
+- name: "Printing output of perf commands"
+  ansible.builtin.debug:
+    var: "output_perf.stdout_lines"
