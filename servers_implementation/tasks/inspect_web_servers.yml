@@ -21,6 +21,7 @@
 
 - name: "Find out the server OS status and resources consumption"
   ansible.builtin.shell: |
+      set -o pipefail && \
       free -mh && \
       echo "--------------"
       uptime && \
@@ -30,7 +31,7 @@
   register: output_perf
   changed_when: false
 
-- name: "Printing the status of Os and resources"
+- name: "Printing the status of OS and resources"
   ansible.builtin.debug:
     var: output_perf.stdout_lines
     
