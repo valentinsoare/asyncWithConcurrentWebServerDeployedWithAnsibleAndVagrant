@@ -2,7 +2,7 @@
   ansible.builtin.command:
     cmd: systemctl status fastwebserver
   register: status
-  changed_when: true
+  changed_when: false
 
 - name: "Printing fastwebserver service status"
   vars:
@@ -28,7 +28,7 @@
       top -b -n 1 | head -n +6 && \
       echo "--------------"
   register: output_perf
-  changed_when: true
+  changed_when: false
 
 - name: "Printing the status of Os and resources"
   ansible.builtin.debug:

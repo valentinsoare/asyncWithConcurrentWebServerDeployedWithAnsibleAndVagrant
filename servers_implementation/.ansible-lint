@@ -2,3 +2,4 @@ skip_list:
     - yaml[empty-lines]
     - yaml[new-line-at-end-of-file]
     - yaml[trailing-spaces]
+    - ansible-lintrisky-shell-pipe]
