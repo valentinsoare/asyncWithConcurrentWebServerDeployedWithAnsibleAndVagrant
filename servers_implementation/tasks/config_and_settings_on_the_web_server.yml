@@ -1,0 +1,21 @@
+---
+- name: "Load variables for settings and configuration"
+  ansible.builtin.include_vars:
+    file: ./group_vars/webserver.yml
+    name: settings_and_config
+
+- name: "Set Message Of The Day banner"
+  ansible.builtin.template:
+    src: ./templates/banner.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Open the {{ settings_and_config.open_port }}"
+  ansible.posix.firewalld:
+    port: "{{ settings_and_config.open_port }}"
+    permanent: true
+    state: enabled
+  tags: open_8080_tcp_port
+...

@@ -1,0 +1,10 @@
+[Unit]
+Description=FastWebServer v0.0.1
+
+[Service]
+ExecStart=bash /home/fastwebserver/execTheFastWebServer.sh
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

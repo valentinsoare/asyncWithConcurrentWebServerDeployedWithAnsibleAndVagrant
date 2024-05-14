@@ -1,0 +1,19 @@
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/fedora39"
+  config.vm.box_check_update = false
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
+  
+  config.vm.provider "libvirt" do |domain|
+      domain.driver = "kvm"
+      domain.host = 'localhost'
+      domain.uri = 'qemu:///system'
+      domain.memory = 4096
+      domain.cpus = 2
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "run_gogogo.yml"
+  end
+
+end

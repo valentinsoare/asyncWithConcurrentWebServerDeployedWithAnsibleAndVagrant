@@ -1,0 +1,37 @@
+---
+- name: "Include users variables"
+  ansible.builtin.include_vars:
+    file: ./group_vars/webserver.yml
+    name: usr
+
+- name: "Creating groups [bobita, tsoare, fastwebserver] for webserver"
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ usr.users }}"
+
+- name: "Creating users [bobita, tsoare, fastwebserver] with proper config values"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "User {{ item.name }} has great power!"
+    shell: "{{ item.shell }}"
+    expires: "{{ item.expires }}"
+    home: "/home/{{ item.name }}"
+    append: false
+  loop: "{{ usr.users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  
+- name: "Add the users in wheel"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: wheel
+    append: true
+  loop: "{{ usr.users }}"
+
+- name: "Give proper permissions to user home directories"
+  ansible.builtin.command:
+    cmd: chmod -R 750 /home/"{{ item.name }}"
+  changed_when: true
+  loop: "{{ usr.users }}"
+...

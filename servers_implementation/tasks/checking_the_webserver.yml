@@ -1,0 +1,11 @@
+---
+- name: "Checking service status"
+  ansible.builtin.command: systemctl status fastwebserver
+  register: result
+  changed_when: true
+  ignore_errors: true
+
+- name: "Printing service status"
+  ansible.builtin.debug:
+    var: result.stdout_lines
+...

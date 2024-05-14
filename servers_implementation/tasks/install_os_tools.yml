@@ -1,0 +1,39 @@
+---
+- name: "Include vars for internal tools"
+  ansible.builtin.include_vars:
+    file: ./group_vars/internal_tools_variables.yml
+    name: var_tools
+
+- name: "Upgrade installed packages available for it"
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_only: true
+  tags: upgrade_packages
+
+- name: "Install bash-completion"
+  ansible.builtin.dnf:
+    name: bash-completion
+    state: present
+  tags: bash-completion
+
+- name: "Install networking tools"
+  ansible.builtin.dnf:
+    name: "{{ var_tools.for_linux_os }}"
+    state: present
+  tags: networking_tools
+
+- name: "Install VSFTPD"
+  ansible.builtin.dnf:
+    name: vsftpd
+    state: present
+  tags: vsftp
+
+- name: "Enable and start the vsftpd server as a service"
+  ansible.builtin.systemd_service:
+    name: vsftpd
+    enabled: true
+    masked: false
+    state: started
+  tags: vsftp
+...

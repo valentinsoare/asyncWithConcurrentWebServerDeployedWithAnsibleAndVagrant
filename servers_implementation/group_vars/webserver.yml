@@ -1,0 +1,19 @@
+---
+open_port: 8080/tcp
+users:
+  - name: bobita
+    expires: 9999
+    shell: /bin/bash
+  - name: tsoare
+    expires: -1
+    shell: /bin/bash
+  - name: fastwebserver
+    expires: -1
+    shell: /bin/bash
+custom_hostname: "{{ ansible_hostname }}"
+fast_webserver_local_location: ../apps_to_be_deploy/
+fast_webserver_remote_location: /home/fastwebserver/
+webservers_as_locations:
+  - democratie
+  - imperialism
+...

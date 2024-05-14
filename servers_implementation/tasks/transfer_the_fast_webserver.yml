@@ -1,0 +1,17 @@
+- name: "Load the webservers vars"
+  ansible.builtin.include_vars:
+    file: ./group_vars/webserver.yml
+    name: websrv
+
+- name: "Copy the fast webserver into remote location"
+  ansible.builtin.copy:
+    src: "{{ websrv.fast_webserver_local_location }}"
+    dest: "{{ websrv.fast_webserver_remote_location }}"
+    owner: fastwebserver
+    group: fastwebserver
+    mode: '0750'
+  register: copy_result
+
+- name: "Printing result/output of the copy process.."
+  ansible.builtin.debug:
+    msg: "Result for the copying of the webserver into remote locations process...{{ copy_result }}"

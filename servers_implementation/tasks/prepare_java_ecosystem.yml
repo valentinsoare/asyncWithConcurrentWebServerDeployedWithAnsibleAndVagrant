@@ -1,0 +1,12 @@
+---
+- name: "Load variables for settings and configuration of the java ecosystem"
+  ansible.builtin.include_vars:
+    file: ./group_vars/internal_tools_variables.yml
+    name: for_java_eco
+
+- name: "Install Java-17 packages"
+  ansible.builtin.dnf:
+    name: "{{ for_java_eco.java_17_packages }}"
+    state: present
+  tags: install_java
+...
