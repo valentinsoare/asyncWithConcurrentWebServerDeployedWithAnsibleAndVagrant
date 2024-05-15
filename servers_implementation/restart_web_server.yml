@@ -1,30 +1,30 @@
 - name: "Planned restart of the fastwebserver"
   hosts: web_servers
   tags: fast_webservers_restart
-  force_handlers: true
+
+  vars:
+    force_restart: "ok"
 
   tasks:
     - name: "Going with restarting the wev server"
       block:
         - name: "Check status of the server"
-          ansible.builtin.command:
-            cmd: systemctl status fastwebserver
+          ansible.builtin.shell:
+            systemctl status fastwebserver
           register: output
-          changed_when: false
           ignore_errors: true
-        
+          notify:
+            - "Restart web server"
+
         - name: "Print the status of the server"
           ansible.builtin.debug:
             var: output.stdout_lines
-          notify:
-            - Restart_web_server
 
   handlers:
-    - name: "Restart_web_server"
-      ansible.builtin.systemd_service:
+    - name: "Restart web server"
+      ansible.builtin.service:
         state: restarted
-        daemon_reload: true
         name: fastwebserver
-      when: ("running" not in output.stdout_lines[4])
+      when: (force_restart == 'ok') or ("running" not in output.stdout_lines[4])
 
 
