@@ -1,0 +1,7 @@
+---
+- name: "Creating users"
+  hosts: web_servers
+
+  roles:
+    - role: users
+...
