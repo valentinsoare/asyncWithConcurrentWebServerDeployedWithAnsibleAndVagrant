@@ -13,6 +13,8 @@
             systemctl status fastwebserver
           register: output
           ignore_errors: true
+          async: 8              # 8 second for this task to complete
+          poll: 2               # polling every 2 secodns in order to verify what is hapening with the task
           notify:
             - "Restart web server"
 
