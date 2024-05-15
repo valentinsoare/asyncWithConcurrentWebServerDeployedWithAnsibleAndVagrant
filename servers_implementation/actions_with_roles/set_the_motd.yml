@@ -1,0 +1,10 @@
+---
+- name: "Setting the banner on the servers (motd)"
+  hosts: all
+
+  roles:
+    - role: motd
+      vars:
+        default_hostname: "{{ ansible_hostname }}"
+        default_system_admin: 'soarevalentinn@gmail.com'
+...
