@@ -13,18 +13,21 @@
             systemctl status fastwebserver
           register: output
           ignore_errors: true
-          async: 8              # 8 second for this task to complete
-          poll: 2               # polling every 2 secodns in order to verify what is hapening with the task
+          async: 2              # 8 second for this task to complete
+          poll: 1               # polling every 2 secodns in order to verify what is hapening with the task
           notify:
             - "Restart web server"
         
         - name: "Waiting for the fastwebserver to come back"
+          check_mode: 
           ansible.builtin.wait_for:
             host: 0.0.0.0
             port: 8080
-            delay: 10
+            delay: 3
             timeout: 60
             state: started
+          when: (force_restart == 'ok') or ("running" not in output.stdout_lines[4])
+          
             
         - name: "Print the status of the server"
           ansible.builtin.debug:
