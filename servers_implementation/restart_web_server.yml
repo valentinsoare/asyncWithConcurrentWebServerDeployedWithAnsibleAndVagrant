@@ -10,14 +10,20 @@
       block:
         - name: "Check status of the server"
           ansible.builtin.shell:
-            systemctl status fastwebserver
+            systemctl is-active fastwebserver
           register: output
           ignore_errors: true
-          async: 2              # 8 second for this task to complete
-          poll: 1               # polling every 2 secodns in order to verify what is hapening with the task
-          notify:
-            - "Restart web server"
-        
+
+        - name: "Restart web server"
+          ansible.builtin.service:
+            state: restarted
+            name: fastwebserver
+          when: (force_restart == 'ok') or ("active" not in output.stdout_lines)
+
+        - name: "Print the server status"
+          ansible.builtin.debug:
+            var: output.stdout_lines
+          
         - name: "Waiting for the fastwebserver to come back"
           check_mode: 
           ansible.builtin.wait_for:
@@ -26,18 +32,19 @@
             delay: 3
             timeout: 60
             state: started
-          when: (force_restart == 'ok') or ("running" not in output.stdout_lines[4])
-          
-            
-        - name: "Print the status of the server"
-          ansible.builtin.debug:
-            var: output.stdout_lines
+          when: (force_restart == 'ok') or ("active" not in output.stdout_lines)
 
-  handlers:
-    - name: "Restart web server"
-      ansible.builtin.service:
-        state: restarted
-        name: fastwebserver
-      when: (force_restart == 'ok') or ("running" not in output.stdout_lines[4])
+    - name: "Check after restart"
+      when: (force_restart == 'ok') or ("active" not in output.stdout_lines)
+      block:    
+        - name: "Check the status of the server after restart"
+          ansible.builtin.shell:
+            systemctl status fastwebserver
+          register: final_after_restart
+          ignore_errors: true
+
+        - name: "Print the status after restart"
+          ansible.builtin.debug:
+            var: final_after_restart.stdout_lines[4:10]
 
 
