@@ -1,8 +1,10 @@
 ---
 for_linux_os: 
   - nmap-ncat 
-  - curl, tcpdump 
-  - wget, traceroute 
+  - curl 
+  - tcpdump 
+  - wget 
+  - traceroute 
   - tcptraceroute 
   - iperf 
   - netperf 
@@ -12,6 +14,4 @@ java_17_packages:
   - java-17-openjdk-devel.x86_64
   - java-17-openjdk-javadoc.x86_64
   - java-17-openjdk-static-libs.x86_64
-graalvm_install_script: ./scripts/install_graalvm.sh
-graalvm_url: https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-22.0.1/graalvm-community-jdk-22.0.1_linux-x64_bin.tar.gz
 ...

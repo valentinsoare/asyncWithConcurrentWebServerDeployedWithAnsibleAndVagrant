@@ -3,7 +3,7 @@
   tags: fast_webservers_restart
 
   vars:
-    force_restart: "ok"
+    force_restart: "nok"
 
   tasks:
     - name: "Going with restarting the wev server"
